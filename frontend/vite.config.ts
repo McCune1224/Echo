@@ -1,11 +1,7 @@
-import postcss from './postcss.config.js';
-import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [svelte()],
-  css:{
-    postcss
-  }
+  plugins: [react()]
 })
