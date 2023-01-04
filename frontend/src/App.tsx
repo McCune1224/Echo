@@ -1,11 +1,10 @@
 import { useState } from "react";
-import ToggleButton from "./components/ToggleButton";
+import SpotifyAuthentication from "./modules/spotify";
 
 
-function App() {
-  return <div className="font-extrabold">
-        <ToggleButton />
-    </div>;
+
+function App() { 
+  return <div className="font-extrabold"><SpotifyAuthentication/></div>;
 }
 
 export default App;
