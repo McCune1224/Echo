@@ -1,10 +1,13 @@
 import { useState } from "react";
-import SpotifyAuthentication from "./modules/spotify";
+import SpotifyAuthentication from "./components/Spotify"; 
+import Nav from "./components/Nav/Nav"
 
-
-
-function App() { 
-  return <div className="font-extrabold"><SpotifyAuthentication/></div>;
+function App() 
+{ 
+  return <>
+  <SpotifyAuthentication />
+  <h1>Work Please.</h1> 
+  </>;
 }
 
 export default App;
