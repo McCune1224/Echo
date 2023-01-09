@@ -26,9 +26,10 @@ func main() {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		// Frontend domains
-		AllowOrigins: "http://localhost:3000, https://echo-frontend.up.railway.app/",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		// Frontend domains whitelist to allow to pass credentials
+		AllowOrigins:     "http://localhost:3000, https://echo-frontend.up.railway.app/",
+		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowCredentials: true,
 	}))
 
 	// Grouping routes
