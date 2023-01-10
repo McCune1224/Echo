@@ -2,12 +2,15 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/McCune1224/Echo/repository"
 	"github.com/McCune1224/Echo/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	jwtware "github.com/gofiber/jwt/v3"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -32,10 +35,20 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	app.Use(limiter.New(limiter.Config{
+		Max:               5,
+		Expiration:        30 * time.Second,
+		LimiterMiddleware: limiter.SlidingWindow{},
+	}))
+
 	// Grouping routes
 	routes.ThirdPartyOauthRoutes(app)
 	routes.UserRoutes(app)
 
+	signKey := []byte(os.Getenv("JWT_SECRET"))
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: signKey,
+	}))
 	// Connect to Database
 	repository.InitDB(os.Getenv("DATABASE_URL"))
 
