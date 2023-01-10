@@ -42,6 +42,7 @@ func main() {
 	}))
 
 	// Grouping routes
+	routes.RootRoutes(app)
 	routes.ThirdPartyOauthRoutes(app)
 	routes.UserRoutes(app)
 
@@ -51,12 +52,6 @@ func main() {
 	}))
 	// Connect to Database
 	repository.InitDB(os.Getenv("DATABASE_URL"))
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"message": "Hello, Echo!",
-		})
-	})
 
 	app.Listen(getPort())
 }

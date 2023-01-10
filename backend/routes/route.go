@@ -6,6 +6,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func RootRoutes(app *fiber.App) {
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"message": "Hello, Echo!",
+		})
+	})
+}
+
 func ThirdPartyOauthRoutes(app *fiber.App) {
 	oAuthRoutes := app.Group("/oauth")
 
