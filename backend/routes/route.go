@@ -32,6 +32,8 @@ func UserRoutes(app *fiber.App) {
 	userRoutes := app.Group("/user")
 
 	// GET ROUTES
+	// userRoutes.Get("/", middleware.Protected(), handlers.UserHandler)
+	userRoutes.Get("/", handlers.UserHandler)
 
 	// POST ROUTES
 	userRoutes.Post("/login", handlers.LoginHandler)

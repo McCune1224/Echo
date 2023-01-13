@@ -9,9 +9,8 @@ type User struct {
 	Password string `gorm:"not null"`
 }
 
-type UserSession struct {
-	gorm.Model
-	UserID    int    `gorm:"not null"`
-	LoginTime string `gorm:"not null"`
-	LastSeen  string `gorm:"not null"`
+type UserResponse struct {
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
