@@ -10,7 +10,8 @@ type Link =
     href: string;
 }
 
-const Nav: React.FC<{}> = () => {
+const Nav: React.FC<{}> = () => 
+{
     return ( <div>hahaa</div>
         /*
         <nav className={styles.navbar}>
