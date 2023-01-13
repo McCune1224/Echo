@@ -8,7 +8,14 @@ import (
 )
 
 func UserHandler(c *fiber.Ctx) error {
-	authHeader := c.Get("Authorization")[7:]
+	authHeader := c.Get("Authorization")
+	// check if authHeader is empty
+	if authHeader == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Unauthorized, no token provided",
+		})
+	}
+	authHeader = authHeader[7:]
 
 	// Put authHeader into a JWT token and then parse claims
 	jwtToken, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
