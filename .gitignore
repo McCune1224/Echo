@@ -136,3 +136,18 @@ go.work
 .air.toml
 tmp/
 
+
+
+##################################################
+# MISC 
+##################################################
+# vscode files to ignore 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/merlin
+!.vscode/vscode.ocaml-platform-*.*
+.code-workspace
+
