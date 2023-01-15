@@ -33,6 +33,9 @@ func SpotifyOauthHandler(c *fiber.Ctx) error {
 	spotifyOauth := spotifyConfig()
 	fmt.Println("FOOBARBAZ", spotifyOauth.RedirectURL)
 	url := spotifyOauth.AuthCodeURL("state")
+
+	// append service name to url
+	url = url + "&service=spotify"
 	return c.Redirect(url)
 }
 
