@@ -23,7 +23,6 @@ func ThirdPartyOauthRoutes(app *fiber.App) {
 	// /oauth/spotify
 	oAuthRoutes.Get("/spotify", oauth.SpotifyOauthHandler)
 	// /oauth/spotify/callback
-	oAuthRoutes.Get("/spotify/callback", oauth.SpotifyOauthCallbackHandler)
 }
 
 func UserRoutes(app *fiber.App) {

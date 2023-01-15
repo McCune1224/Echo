@@ -31,15 +31,10 @@ func spotifyConfig() *oauth2.Config {
 // SpotifyOauthHandler is the handler for the spotify oauth route
 func SpotifyOauthHandler(c *fiber.Ctx) error {
 	spotifyOauth := spotifyConfig()
-	fmt.Println("FOOBARBAZ", spotifyOauth.RedirectURL)
 	url := spotifyOauth.AuthCodeURL("state")
 
 	// append service name to url
 	url = url + "&service=spotify"
+	fmt.Print(fmt.Sprintf("Redirecting to %s", url))
 	return c.Redirect(url)
-}
-
-// SpotifyOauthCallbackHandler is the handler for the spotify oauth callback route
-func SpotifyOauthCallbackHandler(c *fiber.Ctx) error {
-	return c.SendString("Congrats! You've successfully authenticated with Spotify!")
 }
