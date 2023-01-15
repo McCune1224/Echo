@@ -75,6 +75,7 @@ func Login(c *fiber.Ctx) error {
 	// Send the token to the user
 	return c.JSON(fiber.Map{
 		"token": signed_token,
+		"exp":   time.Now().Add(time.Hour * 72).Unix(),
 	})
 }
 
