@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/McCune1224/Echo/handlers"
 	oauth "github.com/McCune1224/Echo/handlers/oauth"
+	"github.com/McCune1224/Echo/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,11 +22,8 @@ func ThirdPartyOauthRoutes(app *fiber.App) {
 
 	// /oauth/spotify
 	oAuthRoutes.Get("/spotify", oauth.SpotifyOauthHandler)
-
 	// /oauth/spotify/callback
 	oAuthRoutes.Get("/spotify/callback", oauth.SpotifyOauthCallbackHandler)
-
-	// ------------------ Youtube ------------------
 }
 
 func UserRoutes(app *fiber.App) {
@@ -33,10 +31,11 @@ func UserRoutes(app *fiber.App) {
 
 	// GET ROUTES
 	// userRoutes.Get("/", middleware.Protected(), handlers.UserHandler)
-	userRoutes.Get("/", handlers.UserHandler)
+	userRoutes.Get("/", middleware.JWTProtected(), handlers.GetUser)
 
 	// POST ROUTES
-	userRoutes.Post("/login", handlers.LoginHandler)
-	userRoutes.Post("/register", handlers.RegisterHandler)
-	userRoutes.Post("/delete", handlers.DeleteHandler)
+	userRoutes.Post("/login", handlers.Login)
+	userRoutes.Post("/register", handlers.Register)
+	userRoutes.Post("/delete", handlers.Delete)
+	userRoutes.Post("/logout", handlers.Logout)
 }
