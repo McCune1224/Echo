@@ -11,15 +11,18 @@ class ValidationStyle
     styles: Array<string>;
 
     //Static Values
-    public static readonly BaseLabel = "block mb-2 text-sm font-medium text-gray-700 dark:text-white-500";
-    public static readonly SuccessLabel = "block mb-2 text-sm font-medium text-green-700 dark:text-green-500";
-    public static readonly FailLabel = "block mb-2 text-sm font-medium text-red-700 dark:text-red-500";
+    public static readonly BaseLabel = "block mb-2 text-4lx font-medium text-gray-700 dark:text-white-500";
+    public static readonly SuccessLabel = "block mb-2 text-4lx font-medium text-green-700 dark:text-green-500";
+    public static readonly FailLabel = "block mb-2 text-4lx font-medium text-red-700 dark:text-red-500";
 
     public static DefaultLabel = () => new ValidationStyle(ValidationStyle.BaseLabel, ValidationStyle.SuccessLabel, ValidationStyle.FailLabel);
     
-    public static readonly BaseInput = "bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
-    public static readonly SuccessInput = "bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500";
-    public static readonly FailInput = "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500";
+    public static readonly BaseInput = 
+    "bg-gray-50 p-4 border border-gray-500 text-gray-900 text-3lx rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+    public static readonly SuccessInput = 
+    "bg-green-50 p-4 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-3lx rounded-lg focus:ring-green-500 focus:border-green-500 block w-full dark:bg-gray-700 dark:border-green-500";
+    public static readonly FailInput = 
+    "bg-red-50 p-4 border border-red-500 text-red-900 placeholder-red-700 text-3lx rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full dark:text-red-500 dark:placeholder-red-500 dark:border-red-500";
 
     public static DefaultInput = () => new ValidationStyle(ValidationStyle.BaseInput, ValidationStyle.SuccessInput, ValidationStyle.FailInput);
 
@@ -139,7 +142,7 @@ class ValidationInputField
         this.labelValidation = ValidationStyle.DefaultLabel();
         this.inputValidation = ValidationStyle.DefaultInput();
         this.messageValidation = ValidationStyle.DefaultMessage();
- 
+
         this.customMessages = new ValidationStyle(customMessageDefault, successMessage, failMessage);
 
         this.labelStyle = new Bindable<string>(this.labelValidation.Base());
@@ -194,7 +197,7 @@ class ValidationInputFieldOnChange extends ValidationInputField
     Export = () =>
     {
         return ( 
-            <div className="mb-6">
+            <div className="mb-6 w-full">
                 <label /*htmlFor={htmlFor}*/ className={this.labelStyle.value}>{this.inputName}</label>
                 {this.required ? 
                 (
@@ -215,7 +218,7 @@ class ValidationInputFieldOnSubmit extends ValidationInputField
     Export = () =>
     {
         return ( 
-            <div className="mb-6">
+            <div className="mb-6 w-full">
                 <label /*htmlFor={htmlFor}*/ className={this.labelStyle.value}>{this.inputName}</label>
                 <input onSubmit={(event) => this.OnSubmit(event)} onChange={(event) => this.OnChange(event)} type={this.htmlType} /*id={id}*/ className={this.inputStyle.value} placeholder={this.placeholder}/>
                 <p className={this.messageStyle.value}><span className="font-medium">{this.customMessage.value}</span></p>
@@ -373,5 +376,10 @@ export {
     InputField,
     EmailInputField,
     PasswordInputField,
-    UsernameInputField
-}
+    UsernameInputField,
+    ValidationStyle,
+    ValidationInputField,
+    ValidationInputFieldOnChange,
+    ValidationInputFieldOnSubmit
+};
+export type { ValidationFunction };
