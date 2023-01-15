@@ -40,13 +40,13 @@ func main() {
 		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
 
+	// Connect to Database
+	repository.InitDB(os.Getenv("DATABASE_URL"))
+
 	// Grouping routes
 	routes.RootRoutes(app)
 	routes.ThirdPartyOauthRoutes(app)
 	routes.UserRoutes(app)
-
-	// Connect to Database
-	repository.InitDB(os.Getenv("DATABASE_URL"))
 
 	app.Listen(getPort())
 }

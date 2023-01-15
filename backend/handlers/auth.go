@@ -12,8 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// LoginHandler handles the login process for a user and returns a JSON response holding a JWT token if successful
-func LoginHandler(c *fiber.Ctx) error {
+// Login handles the login process for a user and returns a JSON response holding a JWT token if successful
+func Login(c *fiber.Ctx) error {
 	var userPostData models.User
 	err := c.BodyParser(&userPostData)
 	if err != nil {
@@ -21,17 +21,28 @@ func LoginHandler(c *fiber.Ctx) error {
 	}
 	log.Println(userPostData)
 
-	// Make sure all required fields are present in data(email, and password)
-	if userPostData.Email == "" || userPostData.Password == "" {
+	// Check if post data has username or Email
+	if userPostData.Email == "" && userPostData.Username == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"message": "Missing required fields",
+			"message": "Email or Username is required",
+		})
+	}
+
+	if userPostData.Password == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Password is required",
 		})
 	}
 
 	// Check if user doesn't exist
 	var existingUser models.User
-	repository.DBConnection.Where("email = ?", userPostData.Email).First(&existingUser)
-	if existingUser.Email == "" {
+	if userPostData.Email != "" {
+		repository.DBConnection.Where("email = ?", userPostData.Email).First(&existingUser)
+	} else {
+		repository.DBConnection.Where("username = ?", userPostData.Username).First(&existingUser)
+	}
+
+	if existingUser.Email == "" && existingUser.Username == "" {
 		return c.JSON(fiber.Map{
 			"message": "User does not exist",
 		})
@@ -46,12 +57,10 @@ func LoginHandler(c *fiber.Ctx) error {
 
 	// Create the Claims
 	claims := jwt.MapClaims{
-		"user": &models.UserResponse{
-			ID:    existingUser.ID,
-			Email: existingUser.Email,
-			Name:  existingUser.Name,
-		},
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
+		"id":    existingUser.ID,
+		"email": existingUser.Email,
+		"name":  existingUser.Username,
+		"exp":   time.Now().Add(time.Hour * 72).Unix(),
 	}
 
 	// Create token
@@ -69,14 +78,14 @@ func LoginHandler(c *fiber.Ctx) error {
 	})
 }
 
-func LogoutHandler(c *fiber.Ctx) error {
+func Logout(c *fiber.Ctx) error {
 	//Overwite current SessionID data to expire at current time
 	//Erase Session Info in DB
 	//?Redirect to desired endpoint?
 	return c.SendString("TODO: LOGOUT")
 }
 
-func RegisterHandler(c *fiber.Ctx) error {
+func Register(c *fiber.Ctx) error {
 	// Unwrap POST Request data
 	var userPostData models.User
 	err := c.BodyParser(&userPostData)
@@ -85,7 +94,7 @@ func RegisterHandler(c *fiber.Ctx) error {
 	}
 
 	// Make sure all required fields are present in data(email, and password)
-	if (userPostData.Email == "" || userPostData.Name == "") || userPostData.Password == "" {
+	if (userPostData.Email == "" || userPostData.Username == "") || userPostData.Password == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "Email and Password are required",
 		})
@@ -118,7 +127,7 @@ func RegisterHandler(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "User Created"})
 }
 
-func DeleteHandler(c *fiber.Ctx) error {
+func Delete(c *fiber.Ctx) error {
 	// Unwrap POST Request Data
 	// Delete any related User Session and then User
 	return c.SendString("TODO: DELETE")

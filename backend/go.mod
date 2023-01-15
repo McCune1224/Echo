@@ -5,15 +5,15 @@ go 1.19
 require (
 	github.com/gofiber/jwt/v3 v3.3.4
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	golang.org/x/crypto v0.4.0
-	golang.org/x/oauth2 v0.3.0
+	golang.org/x/crypto v0.5.0
+	golang.org/x/oauth2 v0.4.0
 )
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.2.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
 )
 
 require (
@@ -32,10 +32,10 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.44.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/net v0.3.0 // indirect
+	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gorm.io/driver/postgres v1.4.6
 	gorm.io/gorm v1.24.3
 )

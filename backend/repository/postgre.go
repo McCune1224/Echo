@@ -24,5 +24,6 @@ func InitDB(dsn string) {
 
 	DBConnection.Logger = logger.Default.LogMode(logger.Info)
 	// DBConnection.AutoMigrate(&models.User{})
-	// DBConnection.AutoMigrate(&models.UserSession{})
+	// DBConnection.AutoMigrate(&models.Playlist{})
+	// DBConnection.AutoMigrate(&models.Track{})
 }
