@@ -6,10 +6,13 @@ import AccountCreationPage from "./components/Authentication/AccountCreationPage
 import InputField from "./components/Core/InputField"; 
 import Auth from "./pages/auth/Auth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 
 function App() 
 {  
+  
+  const [cookies, setCookie] = useCookies(['user']);
   /*
   const PrintValue = () =>
   {

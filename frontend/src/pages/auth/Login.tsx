@@ -32,11 +32,11 @@ export default class Login {
     { 
         const OnClick = () =>
         {
-            open(postUrl);
+            window.open(postUrl, "_self");
         }
         return ( 
             <div className='px-2'>
-                <a className={"h-[50px] rounded-2xl w-[50px] font-[16px]  flex flex-col items-center justify-center " + color} onClick={OnClick}>
+                <a className={"h-[65px] rounded-2xl w-[65px] font-[16px]  flex flex-col items-center justify-center " + color} onClick={OnClick}>
                     <FontAwesomeIcon className={'w-3/4 h-3/4 text-white'} icon={icon} />
                 </a>
             </div>
@@ -47,14 +47,14 @@ export default class Login {
 
         var [id, SetID] = useState(String); 
         var idInputField = new IDInputField(SetID);
-
+        
         var [pw, SetPW] = useState(String);
         var pwInputField = new PasswordInputField(SetPW); 
 
-        var center = "flex flex-col items-center justify-center"; 
+        var center = "flex flex-col items-center justify-center";  
 
         return ( 
-            <div className={'w-full h-full flex-1 ' + center}>
+            <div className={'text-white w-full h-full flex-1 ' + center}>
                 <div className={"w-full h-[100px] " + center}> 
                     <p className=' text-4xl text-white font-bold'>LOGIN</p>
                 </div>
@@ -71,17 +71,18 @@ export default class Login {
                         <br/>
                         
                         <button className={
-                            "top-6 w-full h-[60px] rounded-xl bg-blue-800 font-bold text-xl "} onClick={() => this.OnClick(id, pw)} type="submit">LOGIN</button>
-                        <br/><br/> 
+                            "w-full h-[60px] rounded-xl bg-blue-800 font-bold text-xl text-white"} onClick={() => this.OnClick(id, pw)} type="submit">LOGIN</button>
+                        <br/>
 
                         <span className='text-xl'> Or login with </span> 
-                        <div className='px-9 flex flex-row'>
+                        <div className='flex flex-row py-10'>
                             {<>{this.PlatformLogin("", "bg-blue-600", faGoogle, "#")}</>}
                             {<>{this.PlatformLogin("", "bg-green-600", faSpotify, "https://echo-backend-production.up.railway.app/oauth/spotify")}</>}
                         </div>
+                        <br className=' py-10'/>
                     </div>
                 </form>
-                <div className="text-center w-full p-t-115">
+                <div className=" py-10 text-center w-full p-t-115 ">
                     <span className=" text-xl">Not a member? </span>
                     <a className=" font-bold text-xl" href="#">Sign Up</a>
                 </div>
