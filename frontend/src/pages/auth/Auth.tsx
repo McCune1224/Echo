@@ -3,8 +3,7 @@ import Login from "./Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 
-export default class Auth extends Component {
-
+export default class Auth extends Component { 
 
     CheckAuthCode = () =>
     {  
@@ -22,15 +21,12 @@ export default class Auth extends Component {
         console.log("Service : " + service);
 
         //Now add to cookie
-        const [cookies, setCookie, removeCookie] = useCookies([service]); 
+        const [cookies, setCookie] = useCookies([service]); 
 
-        setCookie(service, code, { path: '/' });
+        setCookie(service, code, { path: '/', expires: new Date(Date.now() + 1000)});
     }
 
-    render() {
-        
-        var login = new Login();
-
+    render() {  
         this.CheckAuthCode();
 
 
@@ -42,7 +38,7 @@ export default class Auth extends Component {
                 h-3/4 min-h-[700px] max-h-[1200px]
                 content-center
                 flex">  
-                    <>{login.render()}</>
+                    <Login/>
                 </div>
             )
         }
@@ -50,8 +46,7 @@ export default class Auth extends Component {
         const Background = () =>
         {
             return (
-                <div className="bg-cover bg-authBackground h-screen grid place-items-center"> 
-                
+                <div className="bg-cover bg-authBackground h-screen grid place-items-center">  
                     <Container/>
                 </div>
             )    

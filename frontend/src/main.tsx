@@ -5,10 +5,8 @@ import './index.css'
 
 import { CookiesProvider } from "react-cookie";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <CookiesProvider>
-      <App />
-    </CookiesProvider> 
-  </React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root')!).render( 
+  <CookiesProvider>
+    <App />
+  </CookiesProvider>  
 )

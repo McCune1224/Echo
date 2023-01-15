@@ -1,40 +1,22 @@
-import { useState } from "react"; 
-import SpotifyAuthentication from "./components/Spotify"; 
-import Nav from "./components/Nav/Nav"
-import LoginPage from "./components/Authentication/LoginPage"; 
-import AccountCreationPage from "./components/Authentication/AccountCreationPage";
-import InputField from "./components/Core/InputField"; 
-import Auth from "./pages/auth/Auth";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";    
+import Auth from "./pages/auth/Auth"; 
 import { useCookies } from 'react-cookie';
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 
 function App() 
-{  
-  
-  const [cookies, setCookie] = useCookies(['user']);
-  /*
-  const PrintValue = () =>
+{   
+  var authProviders = ["spotify", "google"];
+  for (var i = 0; i < authProviders.length; i++)
   {
-    console.log(inputField.valueHolder.value); 
+    var key = authProviders[i];
+    const [value] = useCookies([key]); 
+    var val = value[key];
+    if(val != undefined)  
+      return <Dashboard/>;  
   }
 
-<div>
-<Auth/>
-</div> 
-
-  var inputField = new InputField("inputField1");
-  inputField.valueHolder.InvokeOnChange = PrintValue;
-*/
-return <Auth/>;
-/*
-  return (  
-    <Router>
-      <Routes>
-        <Route path="/auth" element={<Auth/>}/> 
-      </Routes>
-    </Router>
-  );*/
+  return <Auth/>; 
 }
 
 export default App;

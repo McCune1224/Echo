@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import UserInformation from "./UserInformation";
+import React, { useState } from "react"; 
 import * as InputFields from "../ModularComponent/ValidationInputFields";
 import axios from "axios";
 
@@ -60,13 +59,7 @@ const AccountCreationPage = () => {
     {
         console.log("SUBMITTED!");
 
-        event.preventDefault();
-
-        var userInfo = new UserInformation(
-            emailInput,
-            usernameInput,
-            passwordInput
-        );
+        event.preventDefault(); 
         axios
             .post(
                 "https://echo-backend-production.up.railway.app/user/register",
