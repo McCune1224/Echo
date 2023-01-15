@@ -35,9 +35,11 @@ export default class Login {
             open(postUrl);
         }
         return ( 
-            <a className={"bg-" + color + " text-white h-[25px] w-[25px] font-[16px]"} onClick={OnClick}>
-                <FontAwesomeIcon icon={icon} />
-            </a>
+            <div className='px-2'>
+                <a className={"h-[50px] rounded-2xl w-[50px] font-[16px]  flex flex-col items-center justify-center " + color} onClick={OnClick}>
+                    <FontAwesomeIcon className={'w-3/4 h-3/4 text-white'} icon={icon} />
+                </a>
+            </div>
         )
     }
 
@@ -74,8 +76,8 @@ export default class Login {
 
                         <span className='text-xl'> Or login with </span> 
                         <div className='px-9 flex flex-row'>
-                            {<>{this.PlatformLogin("", "white", faGoogle, "#")}</>}
-                            {<>{this.PlatformLogin("", "white", faSpotify, "https://echo-backend-production.up.railway.app/oauth/spotify")}</>}
+                            {<>{this.PlatformLogin("", "bg-blue-600", faGoogle, "#")}</>}
+                            {<>{this.PlatformLogin("", "bg-green-600", faSpotify, "https://echo-backend-production.up.railway.app/oauth/spotify")}</>}
                         </div>
                     </div>
                 </form>
