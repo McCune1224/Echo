@@ -24,4 +24,12 @@
             for the officially supported framework, also powered by Vite!
         </p>
     </div>
+  import logo from './assets/svelte.png'
+  import Auth from './lib/Auth.svelte';
+  import Counter from './lib/Counter.svelte'
+</script>
+
+<main> 
+  <Auth />
+ 
 </main>
