@@ -1,13 +1,13 @@
 <script lang="ts">
-    import logo from "./assets/svelte.png"
-    import Counter from "./lib/Counter.svelte"
-    import "./App.css"
+    import logo from "./assets/svelte.png";
+    import Counter from "./lib/Counter.svelte";
+    import "./App.css";
 </script>
 
 <main>
-    <img src={logo} alt="Svelte Logo" />
-    <!-- Make a div to have the entire page have a dark background using tailwindcss-->
-    <div class="font-extrabold">
+    <!-- Emerald background for entire page in tailwindcss -->
+    <div class="bg-emerald-200 font-extrabold">
+        <img src={logo} alt="Svelte Logo" />
         <h1>Hello Typescript!</h1>
 
         <Counter />
@@ -24,12 +24,4 @@
             for the officially supported framework, also powered by Vite!
         </p>
     </div>
-  import logo from './assets/svelte.png'
-  import Auth from './lib/Auth.svelte';
-  import Counter from './lib/Counter.svelte'
-</script>
-
-<main> 
-  <Auth />
- 
 </main>
