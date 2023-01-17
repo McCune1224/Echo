@@ -8,7 +8,10 @@
     const CheckAuthCode = () =>
     {  
         //https://echo-frontend.up.railway.app//?token_spotify=BQAtWsxWOUjTD25J...
-        var path = window.location.pathname;
+        var path = window.location.href;
+
+        console.log("PATH: ", path);
+
         if(!path.includes("?token_"))
             return;
 
@@ -22,8 +25,9 @@
 
         open('/', "_self");
 
-        CheckAuthCode();
-    }
+    } 
+    
+    CheckAuthCode();
 </script>
 
 <main>
