@@ -1,8 +1,8 @@
 <script lang="ts"> 
     import Spotify from "./Spotify.svelte"  
+
+    let fuckery = "卍﷽卍";
 </script>
 
-
- <div class="full-size bg-black opacity-20" >
-    <Spotify/>
- </div>
+<h1 class="font-black text-9xl text-white">Open Page</h1> 
+<Spotify/>
