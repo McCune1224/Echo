@@ -7,33 +7,18 @@
     //This is strictly for checking whether there is a return code, then close the thingy
     const CheckAuthCode = () =>
     {  
+        //https://echo-frontend.up.railway.app//?token_spotify=BQAtWsxWOUjTD25J...
         var path = window.location.pathname;
-        if(!path.includes("code="))
+        if(!path.includes("?token_"))
             return;
 
-        var args = path.split("code=")[1];
-        console.log("Args : " + args);
+        var serviceEqualsToken = path.split("token_")[1];
+        console.log("Service=Token : " + serviceEqualsToken);
 
-        var code = args.split('&')[0];
-        console.log("Code : " + code);
- 
-        var serviceQuarry = path.split("service=");
-        var service = "";
+        var [service, token] = serviceEqualsToken.split('=');   
 
-        //This is because alex has not fixed the fucking code yet, please add &service=spotify or &service=google or fukcing something.
-        if(serviceQuarry.length == 0)
-        {
-            service = "spotify";
-            alert("Alex, please add &service={service name} so i can actually use it. go to App.svelte line 23 and it's a god damn mess. Currently," +
-            " the only service that works is spotify.");
-        }
-        else
-        {
-            service = serviceQuarry[1];
-            console.log("Service : " + service);
-        }
         //Now add to cookie  
-        SetCookie(service, code);
+        SetCookie(service, token);
     }
 </script>
 

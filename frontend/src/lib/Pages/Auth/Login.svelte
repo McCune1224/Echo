@@ -1,14 +1,11 @@
 <script lang="ts">
 
-    import { faGoogle, faSpotify } from '@fortawesome/free-brands-svg-icons';
-
-    import InputField from "../../Elements/InputField.svelte";
-    import PlatformLoginButton from "../../Elements/PlatformLoginButton.svelte"
-
+    import InputField from "../../Elements/InputField.svelte";  
 
     import axios from "axios";  
-    import env from '../../API/Env'
-    import { prevent_default } from 'svelte/internal'
+    import env from '../../API/Env'  
+    import LoginButtonGoogle from "./Platform/LoginButtonGoogle.svelte"
+    import LoginButtonSpotify from "./Platform/LoginButtonSpotify.svelte"
     
     var center = "flex flex-col items-center justify-center";
     
@@ -89,8 +86,8 @@
 
             <span class='text-xl'> Or login with </span> 
             <div class='flex flex-row py-10'>
-                <PlatformLoginButton text="" color="text-green-500" icon={faSpotify} postUrl={env.VITE_SPOTIFY_OAUTH_API_URL}/>
-                <PlatformLoginButton text="" color="text-blue-500" icon={faGoogle} postUrl={env.VITE_GOOGLE_OAUTH_API_URL}/>
+                <LoginButtonSpotify/>
+                <LoginButtonGoogle/>
             </div>
             <br class=' py-10'/>
         </div>
