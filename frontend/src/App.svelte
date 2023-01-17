@@ -19,6 +19,8 @@
 
         //Now add to cookie  
         SetCookie(service, token);
+
+        open('/', "_self");
     }
 </script>
 

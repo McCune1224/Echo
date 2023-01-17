@@ -9,7 +9,7 @@
 
     const OnClick = () =>
     {
-        window.open(postUrl, "Link Platform");
+        window.open(postUrl, "_self");
     }
 </script>
 
