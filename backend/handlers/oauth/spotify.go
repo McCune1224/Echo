@@ -49,5 +49,5 @@ func SpotifyCallbackHandler(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	return c.Redirect(os.Getenv("FRONTEND_URI") + "/?token_spotify=" + token.AccessToken)
+	return c.Redirect(os.Getenv("FRONTEND_DOMAIN") + "/?token_spotify=" + token.AccessToken)
 }
