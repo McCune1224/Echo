@@ -9,7 +9,7 @@
 
     const OnClick = () =>
     {
-        window.open(postUrl, "_self");
+        open(postUrl, "_self");
     }
 </script>
 

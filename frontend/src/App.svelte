@@ -21,6 +21,8 @@
         SetCookie(service, token);
 
         open('/', "_self");
+
+        CheckAuthCode();
     }
 </script>
 
