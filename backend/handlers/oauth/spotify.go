@@ -38,3 +38,16 @@ func SpotifyOauthHandler(c *fiber.Ctx) error {
 	fmt.Print(fmt.Sprintf("Redirecting to %s", url))
 	return c.Redirect(url)
 }
+
+func SpotifyCallbackHandler(c *fiber.Ctx) error {
+	token, err := spotifyConfig().Exchange(oauth2.NoContext, c.Query("code"))
+	if err != nil {
+		return c.SendStatus(500)
+	}
+
+	if len(token.AccessToken) == 0 {
+		return c.SendStatus(500)
+	}
+
+	return c.Redirect(os.Getenv("FRONTEND_URI") + "/?token_spotify=" + token.AccessToken)
+}

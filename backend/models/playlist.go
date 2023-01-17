@@ -19,7 +19,7 @@ type Playlist struct {
 
 // Playlist Response is the model for a JSON response of a playlist
 type PlaylistResponse struct {
-	PlaylistName     string          `json:"playlistName"`
+	Name             string          `json:"name"`
 	StreamingService string          `json:"streamingService"`
 	URI              string          `json:"uri"`
 	ImageURL         string          `json:"imageURL"`
