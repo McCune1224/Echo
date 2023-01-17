@@ -1,5 +1,6 @@
 <script lang='ts'> 
     import CreateAPIClient from "../API/APIClient";
+    import { GetCookie } from "../API/CookieManager"
     import Login from "./Auth/Login.svelte"
     import Dashboard from "./Dashboard/Dashboard.svelte"
     
@@ -13,16 +14,6 @@
 
         //Display Attributes
         shrinkLoginField = true;
-    }
-
-    const GetCookie = (key: string) =>
-    {
-        var cookie = document.cookie; 
-        if(!cookie.includes(key + '=')) return null;
-
-        var value = '; ' + cookie;
-        const parts = value.split('; ' + key + '=');
-        if(parts.length === 2) return parts.pop().split(';').shift();
     } 
     
     function RefreshValidity()
@@ -62,10 +53,10 @@
         console.log("shrink dashboard : ", shrinkDashboard);
     }
 
-    function DisableLoginField()
-    {
+    function DisableLoginField(event: TransitionEvent & { currentTarget: EventTarget & HTMLDivElement })
+    {  
         displayLoginField = false;
-        console.log(displayLoginField);
+        console.log("Display Login Field Status: " + displayLoginField);
         //Chain
         expand = true;
         EnableDashboard();
@@ -74,10 +65,8 @@
     function ContainerTransitionEnd()
     {
         
-    }
+    } 
 
-    //Login -> shrink the page.
- 
     RefreshValidity();
 
 </script>
@@ -86,11 +75,12 @@
     <div class={(expand ? "main-container-expanded" : "main-container") + " transition-slow"} on:transitionend={ContainerTransitionEnd}>
         {#if displayLoginField}
 
-            <div class={(shrinkLoginField ? "shrinkable-close" : "shrinkable-open") + " transition-normal w-full h-full"} 
-            on:transitionend={DisableLoginField}>
-            <Login OnSubmit={RefreshValidity}/></div>
+            <div id="LoginField" class={(shrinkLoginField ? "shrinkable-close" : "shrinkable-open") + " transition-normal w-full h-full"} 
+            on:transitionend={(event) => DisableLoginField(event)}>
+                <Login OnSubmit={RefreshValidity} />
+            </div>
         {:else}
-            <div class={(shrinkDashboard ? "shrinkable-close" : "shrinkable-open") + " transition-slow w-full h-full"}>
+            <div class={(shrinkDashboard ? "shrinkable-close" : "shrinkable-open") + " transition-slow w-full h-full + center-component"}>
             <Dashboard/>
             </div>
         {/if}
