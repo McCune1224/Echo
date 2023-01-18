@@ -1,7 +1,6 @@
 package oauth
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,18 +27,15 @@ func spotifyConfig() *oauth2.Config {
 	return conf
 }
 
-// SpotifyOauthHandler is the handler for the spotify oauth route
-func SpotifyOauthHandler(c *fiber.Ctx) error {
+// SpotifyOauth is the handler for the spotify oauth route
+func SpotifyOauth(c *fiber.Ctx) error {
 	spotifyOauth := spotifyConfig()
 	url := spotifyOauth.AuthCodeURL("state")
 
-	// append service name to url
-	url = url + "&service=spotify"
-	fmt.Print(fmt.Sprintf("Redirecting to %s", url))
 	return c.Redirect(url)
 }
 
-func SpotifyCallbackHandler(c *fiber.Ctx) error {
+func SpotifyRedirect(c *fiber.Ctx) error {
 	token, err := spotifyConfig().Exchange(oauth2.NoContext, c.Query("code"))
 	if err != nil {
 		return c.SendStatus(500)
@@ -49,5 +45,7 @@ func SpotifyCallbackHandler(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	return c.Redirect(os.Getenv("FRONTEND_DOMAIN") + "/?token_spotify=" + token.AccessToken)
+	// return c.JSON(token)
+	// log.Println(token.AccessToken)
+	return c.Redirect(os.Getenv("FRONTEND_DOMAIN") + "?token_spotify=" + token.AccessToken)
 }

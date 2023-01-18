@@ -150,4 +150,5 @@ tmp/
 !.vscode/merlin
 !.vscode/vscode.ocaml-platform-*.*
 .code-workspace
+.vscode/
 

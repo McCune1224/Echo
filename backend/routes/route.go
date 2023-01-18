@@ -19,10 +19,8 @@ func ThirdPartyOauthRoutes(app *fiber.App) {
 	oAuthRoutes := app.Group("/oauth")
 
 	// ------------------ Spotify ------------------
-
-	// /oauth/spotify
-	oAuthRoutes.Get("/spotify", oauth.SpotifyOauthHandler)
-	oAuthRoutes.Get("/spotify/redirect", oauth.SpotifyCallbackHandler)
+	oAuthRoutes.Get("/spotify", oauth.SpotifyOauth)
+	oAuthRoutes.Get("/spotify/redirect", oauth.SpotifyRedirect)
 }
 
 func UserRoutes(app *fiber.App) {
