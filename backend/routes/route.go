@@ -36,3 +36,22 @@ func UserRoutes(app *fiber.App) {
 	userRoutes.Post("/delete", handlers.Delete)
 	userRoutes.Post("/logout", handlers.Logout)
 }
+
+func PlaylistRoutes(app *fiber.App) {
+	playlistRoutes := app.Group("/playlist", middleware.JWTProtected())
+
+	// GET ROUTES
+	playlistRoutes.Get("/", handlers.GetAllPlaylists)
+	playlistRoutes.Get("/:id", handlers.GetPlaylist)
+
+	// POST ROUTES
+	playlistRoutes.Post("/create", handlers.CreatePlaylist)
+
+	// PUT ROUTES
+	playlistRoutes.Put("/update/:id/tracks", handlers.UpdatePlaylistTracks)
+	playlistRoutes.Put("/update/:id", handlers.UpdatePlaylistDetails)
+
+	// DELETE ROUTES
+	playlistRoutes.Delete("/delete/:id", handlers.DeletePlaylist)
+	playlistRoutes.Delete("/delete/:id/tracks", handlers.DeletePlaylistTracks)
+}

@@ -47,6 +47,7 @@ func main() {
 	routes.RootRoutes(app)
 	routes.ThirdPartyOauthRoutes(app)
 	routes.UserRoutes(app)
+	routes.PlaylistRoutes(app)
 
 	app.Listen(getPort())
 }

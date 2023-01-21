@@ -133,3 +133,13 @@ func Delete(c *fiber.Ctx) error {
 	// Delete any related User Session and then User
 	return c.SendString("TODO: DELETE")
 }
+
+// util function to parse JWT token, get the float64 user id convert it to uint
+func GetUserIDFromJWT(c *fiber.Ctx) (uint, error) {
+	// Get the token from the request
+	token := c.Locals("user").(*jwt.Token)
+	// Get the user id from the token
+	claims := token.Claims.(jwt.MapClaims)
+	userID := claims["id"].(float64)
+	return uint(userID), nil
+}

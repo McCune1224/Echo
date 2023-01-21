@@ -24,3 +24,21 @@ type TrackResponse struct {
 	URI      string `json:"uri"`
 	ImageURL string `json:"imageURL"`
 }
+
+func NewTrackResponse(track *[]Track) *[]TrackResponse {
+	// check if track is nil or list of 0, if so return nil
+	if track == nil || len(*track) == 0 {
+		return nil
+	}
+	trackResponse := make([]TrackResponse, len(*track))
+	for i, t := range *track {
+		trackResponse[i] = TrackResponse{
+			Name:     t.Name,
+			Album:    t.Album,
+			Artist:   t.Artist,
+			URI:      t.URI,
+			ImageURL: t.ImageURL,
+		}
+	}
+	return &trackResponse
+}
