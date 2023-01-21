@@ -1,9 +1,10 @@
 import axios from 'axios'; 
+import env from './Env';
 
 const CreateAPIClient = (token) =>
 { 
     return axios.create({
-        baseURL: 'https://echo-backend-production.up.railway.app/',
+        baseURL: env.VITE_BACKEND_LOGIN_URL,
         headers: {'Authorization': 'Bearer ' + token}
     });
 } 

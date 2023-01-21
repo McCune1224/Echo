@@ -17,11 +17,14 @@
     const ChangeID = (value: string) => { id = value; } 
     const ChangePW = (value: string) => { pw = value; }
 
-    const OnClick = (event:Event & {currentTarget: EventTarget & HTMLFormElement;}) =>
-    {
 
-        event.preventDefault();
 
+    function OnClick(event:Event & {currentTarget: EventTarget & HTMLFormElement;})
+    { 
+        event.preventDefault();  
+
+        function AxiosFetch()
+        {
         axios
             .post(
                 env.VITE_LOGIN_URL,
@@ -53,9 +56,10 @@
             })
             .catch((error) =>{
                 console.log(error)
-            })
+            }) 
+        }
 
-            
+        AxiosFetch();
     }
 
 
