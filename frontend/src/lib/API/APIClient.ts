@@ -1,12 +1,11 @@
-import axios from 'axios'; 
-import env from './Env';
+import axios from 'axios'
+import env from './Env'
 
-const CreateAPIClient = (token) =>
-{ 
+const CreateAPIClient = (token) => {
     return axios.create({
         baseURL: env.VITE_BACKEND_LOGIN_URL,
-        headers: {'Authorization': 'Bearer ' + token}
-    });
-} 
+        headers: { Authorization: 'Bearer ' + token },
+    })
+}
 
-export default CreateAPIClient;
+export default CreateAPIClient

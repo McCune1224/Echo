@@ -1,36 +1,33 @@
-<script lang="ts">  
-    import css from "./App.css";
-    import { SetCookie } from "./lib/API/CookieManager" 
-    import env from "./lib/API/Env"
-    import PageManager from "./lib/Pages/PageManager.svelte";     
+<script lang="ts">
+    import css from './App.css'
+    import { SetCookie } from './lib/API/CookieManager'
+    import env from './lib/API/Env'
+    import PageManager from './lib/Pages/PageManager.svelte'
 
     //This is strictly for checking whether there is a return code, then close the thingy
-    const CheckAuthCode = () =>
-    {  
+    const CheckAuthCode = () => {
         //https://echo-frontend.up.railway.app//?token_spotify=BQAtWsxWOUjTD25J...
-        var path = window.location.href;
+        var path = window.location.href
 
-        console.log("PATH: ", path);
+        console.log('PATH: ', path)
 
-        if(!path.includes("?token_"))
-            return;
+        if (!path.includes('?token_')) return
 
-        var serviceEqualsToken = path.split("token_")[1];
-        console.log("Service=Token : " + serviceEqualsToken);
+        var serviceEqualsToken = path.split('token_')[1]
+        console.log('Service=Token : ' + serviceEqualsToken)
 
-        var [service, token] = serviceEqualsToken.split('=');   
+        var [service, token] = serviceEqualsToken.split('=')
 
-        //Now add to cookie  
-        SetCookie(service, token);
+        //Now add to cookie
+        SetCookie(service, token)
 
-        open('/', "_self");
+        open('/', '_self')
+    }
 
-    } 
-    
-    CheckAuthCode();
+    CheckAuthCode()
 </script>
 
 <main>
     <!-- Emerald background for entire page in tailwindcss -->
-    <PageManager/>
+    <PageManager />
 </main>
