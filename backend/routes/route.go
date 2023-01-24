@@ -16,42 +16,41 @@ func RootRoutes(app *fiber.App) {
 }
 
 func ThirdPartyOauthRoutes(app *fiber.App) {
-	oAuthRoutes := app.Group("/oauth")
+	oAuthRoutes := app.Group("/oauth") // /oauth/
 
-	// ------------------ Spotify ------------------
-	oAuthRoutes.Get("/spotify", oauth.SpotifyOauth)
-	oAuthRoutes.Get("/spotify/redirect", oauth.SpotifyRedirect)
+	oAuthRoutes.Get("/spotify", oauth.SpotifyOauth)             // /oauth/spotify
+	oAuthRoutes.Get("/spotify/redirect", oauth.SpotifyRedirect) // /oauth/spotify/redirect
 }
 
 func UserRoutes(app *fiber.App) {
-	userRoutes := app.Group("/user")
+	userRoutes := app.Group("/user") // /user/
 
 	// GET ROUTES
 	// userRoutes.Get("/", middleware.Protected(), handlers.UserHandler)
-	userRoutes.Get("/", middleware.JWTProtected(), handlers.GetUser)
+	userRoutes.Get("/", middleware.JWTProtected(), handlers.GetUser) // /user
 
 	// POST ROUTES
-	userRoutes.Post("/login", handlers.Login)
-	userRoutes.Post("/register", handlers.Register)
-	userRoutes.Post("/delete", handlers.Delete)
-	userRoutes.Post("/logout", handlers.Logout)
+	userRoutes.Post("/login", handlers.Login)       // /user/login
+	userRoutes.Post("/register", handlers.Register) // /user/register
+	userRoutes.Post("/delete", handlers.Delete)     // /user/delete
+	userRoutes.Post("/logout", handlers.Logout)     // /user/logout
 }
 
 func PlaylistRoutes(app *fiber.App) {
 	playlistRoutes := app.Group("/playlist", middleware.JWTProtected())
 
 	// GET ROUTES
-	playlistRoutes.Get("/", handlers.GetAllPlaylists)
-	playlistRoutes.Get("/:id", handlers.GetPlaylist)
+	playlistRoutes.Get("/", handlers.GetAllPlaylists) // /playlist
+	playlistRoutes.Get("/:id", handlers.GetPlaylist)  // /playlist/:id
 
 	// POST ROUTES
-	playlistRoutes.Post("/create", handlers.CreatePlaylist)
+	playlistRoutes.Post("/create", handlers.CreatePlaylist) // /playlist/create
 
 	// PUT ROUTES
-	playlistRoutes.Put("/update/:id/tracks", handlers.UpdatePlaylistTracks)
-	playlistRoutes.Put("/update/:id", handlers.UpdatePlaylistDetails)
+	playlistRoutes.Put("/update/:id/tracks", handlers.UpdatePlaylistTracks) // /playlist/update/:id/tracks
+	playlistRoutes.Put("/update/:id", handlers.UpdatePlaylistDetails)       // /playlist/update/:id
 
 	// DELETE ROUTES
-	playlistRoutes.Delete("/delete/:id", handlers.DeletePlaylist)
-	playlistRoutes.Delete("/delete/:id/tracks", handlers.DeletePlaylistTracks)
+	playlistRoutes.Delete("/delete/:id", handlers.DeletePlaylist)              // /playlist/delete/:id
+	playlistRoutes.Delete("/delete/:id/tracks", handlers.DeletePlaylistTracks) // /playlist/delete/:id/tracks
 }
