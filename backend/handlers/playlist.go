@@ -90,9 +90,43 @@ func CreatePlaylist(c *fiber.Ctx) error {
 }
 
 func UpdatePlaylistTracks(c *fiber.Ctx) error {
+	userID, jwtErr := GetUserIDFromJWT(c)
+	if jwtErr != nil {
+		return c.Status(401).JSON(fiber.Map{
+			"message": "Unauthorized",
+		})
+	}
+
+	// Get playlist id from request
+	playlistID := c.Params("id")
+
+	requestTracks := models.TrackResponse{}
+	bodyParseErr := c.BodyParser(&requestTracks)
+	if bodyParseErr != nil {
+		c.JSON(fiber.Map{
+			"message": "Invalid JSON",
+		})
+	}
+
+	// Get playlist from database
+	var playlist models.Playlist
+	// query the database for the playlist with the given id and user_id
+	repository.DBConnection.Where("id = ? AND user_id = ?", playlistID, userID).First(&playlist)
+	// Check if playlist exists
+	if playlist.ID == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"message": "Playlist does not exist",
+		})
+	}
+
+    //Update playlist tracks 
+    playlist.Tracks = 
+
 	return c.JSON(fiber.Map{
-		"TODO": "Update playlist tracks",
+		"equestTracks": requestTracks,
+		"playlistID":   playlistID,
 	})
+	// return c.JSON(requestTracks)
 }
 
 func UpdatePlaylistDetails(c *fiber.Ctx) error {
