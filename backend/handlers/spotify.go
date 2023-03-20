@@ -1,8 +1,11 @@
-package oauth
+package handlers
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/McCune1224/Echo/models"
+	"github.com/McCune1224/Echo/repository"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
 )
@@ -27,25 +30,38 @@ func spotifyConfig() *oauth2.Config {
 	return conf
 }
 
-// SpotifyOauth is the handler for the spotify oauth route
 func SpotifyOauth(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"message": "TODO: Implement SpotifyOauth after fixing auth",
+	})
+	userID := 42069
 	spotifyOauth := spotifyConfig()
 	url := spotifyOauth.AuthCodeURL("state")
+	url = fmt.Sprintf("%s&user=%d", url, userID)
 
 	return c.Redirect(url)
 }
 
 func SpotifyRedirect(c *fiber.Ctx) error {
-	token, err := spotifyConfig().Exchange(oauth2.NoContext, c.Query("code"))
+	spotifyToken, err := spotifyConfig().Exchange(oauth2.NoContext, c.Query("code"))
+	userID := c.Query("user")
+
+	user := models.User{}
+	dbCtx := repository.DBConnection.First(&user, userID)
+	if dbCtx.Error != nil {
+		return c.SendStatus(500)
+	}
+
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	if len(token.AccessToken) == 0 {
+	if len(spotifyToken.AccessToken) == 0 {
 		return c.SendStatus(500)
 	}
 
 	// return c.JSON(token)
 	// log.Println(token.AccessToken)
-	return c.Redirect(os.Getenv("FRONTEND_DOMAIN") + "?token_spotify=" + token.AccessToken)
+	// return c.Redirect(os.Getenv("FRONTEND_DOMAIN") + "?token_spotify=" + token.AccessToken + "&refresh_token_spotify=" + token.RefreshToken)
+	return c.Redirect("http://localhost:4000/dashboard" + "?token_spotify=" + spotifyToken.AccessToken + "&refresh_token_spotify=" + spotifyToken.RefreshToken)
 }

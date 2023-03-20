@@ -24,7 +24,8 @@ func getPort() string {
 	return port
 }
 
-func main() {
+// Adding this for the sake of repeatbility in unit testing
+func Setup() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
@@ -39,15 +40,18 @@ func main() {
 		Expiration:        30 * time.Second,
 		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
-
 	// Connect to Database
 	repository.InitDB(os.Getenv("DATABASE_URL"))
-
 	// Grouping routes
 	routes.RootRoutes(app)
 	routes.ThirdPartyOauthRoutes(app)
-	routes.UserRoutes(app)
+	routes.UserAuthRoutes(app)
 	routes.PlaylistRoutes(app)
 
+	return app
+}
+
+func main() {
+	app := Setup()
 	app.Listen(getPort())
 }

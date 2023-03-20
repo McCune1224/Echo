@@ -1,145 +1,155 @@
 package handlers
 
 import (
-	"log"
-	"os"
-	"time"
+	"regexp"
 
 	"github.com/McCune1224/Echo/models"
 	"github.com/McCune1224/Echo/repository"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Login handles the login process for a user and returns a JSON response holding a JWT token if successful
 func Login(c *fiber.Ctx) error {
-	var userPostData models.User
-	err := c.BodyParser(&userPostData)
-	if err != nil {
-		return err
+	userData := &models.User{}
+	if err := c.BodyParser(userData); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid data",
+		})
 	}
-	log.Println(userPostData)
 
-	// Check if post data has username or Email
-	if userPostData.Email == "" && userPostData.Username == "" {
+	// Validate email and username
+	if userData.Email == "" && userData.Username == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "Email or Username is required",
 		})
 	}
-
-	if userPostData.Password == "" {
+	if userData.Password == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"message": "Password is required",
+			"message": "Password Required",
 		})
 	}
 
-	// Check if user doesn't exist
-	var existingUser models.User
-	if userPostData.Email != "" {
-		repository.DBConnection.Where("email = ?", userPostData.Email).First(&existingUser)
-	} else {
-		repository.DBConnection.Where("username = ?", userPostData.Username).First(&existingUser)
-	}
-
-	if existingUser.Email == "" && existingUser.Username == "" {
-		return c.JSON(fiber.Map{
-			"message": "User does not exist",
+	dbUser := &models.User{}
+	dbResult := repository.DBConnection.Where("email = ?", userData.Email).First(&dbUser)
+	if dbResult.Error != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Error finding user",
+			"error":   dbResult.Error,
 		})
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(userPostData.Password))
-	if err != nil {
-		return c.JSON(fiber.Map{
-			"message": "Incorrect password",
+	if dbUser.ID == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "User not found",
 		})
 	}
 
-	// Create the Claims
-	claims := jwt.MapClaims{
-		"id":    existingUser.ID,
-		"email": existingUser.Email,
-		"name":  existingUser.Username,
-		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+	hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(userData.Password))
+	fart, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+
+	if hashErr != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message":  "Invalid password",
+			"error":    hashErr.Error(),
+			"dbUser":   dbUser.Password,
+			"userData": string(fart),
+		})
 	}
-
-	// Create token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Generate encoded token and send it as response.
-	signed_token, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	// Send the token to the user
 	return c.JSON(fiber.Map{
-		"token": signed_token,
-		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+		"message": "TODO: Implement Return of Session",
 	})
 }
 
 func Logout(c *fiber.Ctx) error {
-	//Overwite current SessionID data to expire at current time
-	//Erase Session Info in DB
-	//?Redirect to desired endpoint?
-	return c.SendString("TODO: LOGOUT")
+	return c.JSON(fiber.Map{
+		"message": "TODO: Implement Logout",
+	})
 }
 
+// handles the registration of a new user
 func Register(c *fiber.Ctx) error {
-	// Unwrap POST Request data
-	var userPostData models.User
-	err := c.BodyParser(&userPostData)
-	if err != nil {
-		return err
-	}
-
-	// Make sure all required fields are present in data(email, and password)
-	if (userPostData.Email == "" || userPostData.Username == "") || userPostData.Password == "" {
+	userData := &models.User{}
+	if err := c.BodyParser(userData); err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"message": "Email and Password are required",
-		})
-	}
-	// Hash Passowrd
-	hash_password, err := bcrypt.GenerateFromPassword([]byte(userPostData.Password), 14)
-	userPostData.Password = string(hash_password)
-	if err != nil {
-		return err
-	}
-
-	// Check if user already exists
-	var existingUser models.User
-	repository.DBConnection.Where("email = ?", userPostData.Email).First(&existingUser)
-	if existingUser.Email != "" {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "User already exists",
+			"message": "Invalid data",
 		})
 	}
 
-	// Create User
-	key := repository.DBConnection.Create(&userPostData)
-	if key.Error != nil {
-		return key.Error
+	// Validate that email is not taken
+	existingUser := &models.User{}
+	repository.DBConnection.Where("email = ? or username = ?", userData.Email, userData.Username).First(&existingUser)
+	if existingUser.ID != 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Email already taken",
+		})
+	}
+	if existingUser.Username != "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Username already taken",
+		})
 	}
 
-	// Validate neccesary info (Username, Password & Email)
-	// Unwrap POST Data into GORM User struct
-	// Store User Struct in Database
-	return c.JSON(fiber.Map{"message": "User Created"})
+	// validate email format
+	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+	if !emailRegex.MatchString(userData.Email) {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid email",
+		})
+	}
+
+	// Validate password length
+	if len(userData.Password) < 8 || len(userData.Password) > 32 {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Password must be between 8 and 32 characters",
+		})
+	}
+
+	// Validate password contains number
+	if !regexp.MustCompile(`[0-9]`).MatchString(userData.Password) {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Password must contain at least one number",
+		})
+	}
+
+	// Validate password contains special character
+	if !regexp.MustCompile(`[!@#$%^&*]`).MatchString(userData.Password) {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Password must contain at least one special character",
+		})
+	}
+
+	// Validate password has upper and lower case
+	if !regexp.MustCompile(`[a-z]`).MatchString(userData.Password) || !regexp.MustCompile(`[A-Z]`).MatchString(userData.Password) {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Password must contain at least one upper and lower case letter",
+		})
+	}
+
+	// dbResult := repository.DBConnection.Create(newUser)
+	// create new user
+	dbResult := repository.DBConnection.Create(userData)
+	if dbResult.Error != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Error creating user",
+			"error":   dbResult.Error.Error(),
+		})
+	}
+
+	// return new user id
+	return c.JSON(fiber.Map{
+		"message": "User created",
+		"id":      userData.ID,
+	})
+}
+
+func Update(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"message": "TODO: Implement Update",
+	})
 }
 
 func Delete(c *fiber.Ctx) error {
-	// Unwrap POST Request Data
-	// Delete any related User Session and then User
-	return c.SendString("TODO: DELETE")
-}
-
-// util function to parse JWT token, get the float64 user id convert it to uint
-func GetUserIDFromJWT(c *fiber.Ctx) (uint, error) {
-	// Get the token from the request
-	token := c.Locals("user").(*jwt.Token)
-	// Get the user id from the token
-	claims := token.Claims.(jwt.MapClaims)
-	userID := claims["id"].(float64)
-	return uint(userID), nil
+	return c.JSON(fiber.Map{
+		"message": "TODO: Implement Delete",
+	})
 }

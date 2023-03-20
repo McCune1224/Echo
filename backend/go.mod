@@ -3,9 +3,7 @@ module github.com/McCune1224/Echo
 go 1.19
 
 require (
-	github.com/gofiber/jwt/v3 v3.3.4
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	golang.org/x/crypto v0.5.0
 	golang.org/x/oauth2 v0.4.0
 )
 
@@ -13,13 +11,19 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.2.0 // indirect
+	github.com/lib/pq v1.10.7 // indirect
+	github.com/philhofer/fwd v1.1.1 // indirect
+	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
+	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d // indirect
+	github.com/tinylib/msgp v1.1.6 // indirect
+	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/gofiber/fiber/v2 v2.41.0
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/gofiber/fiber/v2 v2.42.0
+	github.com/gofiber/storage/postgres v1.3.4
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
