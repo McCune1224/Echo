@@ -8,17 +8,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Create env file'
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
       - uses: actions/checkout@v3
+      
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.19.x'
+      
       - name: Install dependencies
         run: go get .
+      
       - name: Build
         run: go build -v ./...
+      
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+        
       - name: Test with the Go CLI
         run: go test -v ./...
