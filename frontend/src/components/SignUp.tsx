@@ -44,10 +44,8 @@ const SignUp = () => {
             }
         }
         catch (error) {
-            if (axios.isAxiosError(error)) {
-                const axiosError = error as AxiosError
-                setSubmitError(axiosError.response?.data.message)
-            }
+            console.log(error)
+
         }
     }
 
