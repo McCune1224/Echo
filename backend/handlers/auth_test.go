@@ -3,6 +3,8 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http/httptest"
 	"os"
 	"testing"
@@ -11,7 +13,7 @@ import (
 	"github.com/McCune1224/Echo/repository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
 )
 
 // Adding this for the sake of repeatbility in unit testing
@@ -23,6 +25,11 @@ func Setup() *fiber.App {
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))
+
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	// Connect to Database
 	repository.InitDB(os.Getenv("DATABASE_URL"))
@@ -39,6 +46,9 @@ func TestRegister(t *testing.T) {
 		ExpectedStatus  int
 		ExpectedMessage string
 	}
+
+	foo := "bar"
+	fmt.Println(foo)
 
 	t.Run("Register with valid data", func(t *testing.T) {
 		validPostData := testData{
@@ -197,5 +207,4 @@ func TestLogin(t *testing.T) {
 			t.Errorf("Expected status %d, got %d\nMessage: %v", validPostData.ExpectedStatus, res.StatusCode, jsonResponse["message"])
 		}
 	})
-
 }
