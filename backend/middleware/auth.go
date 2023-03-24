@@ -1,38 +1,47 @@
 package middleware
 
 import (
+	"time"
+
 	"github.com/McCune1224/Echo/models"
 	"github.com/McCune1224/Echo/repository"
 	"github.com/gofiber/fiber/v2"
 )
 
-// AuthMiddleware is a middleware that checks if the user is authenticated via a session cookie sent in the request header
-// If the user is authenticated, the middleware will continue to the next middleware, if not will 401
+// Will set the 'session' in the context if the session is valid
+// Will return a 401 if the session is not valid
 func AuthMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		// Check if the user is authenticated
-		sessionHeader := c.Get("session")
-		if sessionHeader == "" {
+		// Get auth header
+		requestSessionID := c.Get("Authorization")
+		if requestSessionID == "" {
 			return c.Status(401).JSON(fiber.Map{
 				"message": "Unauthorized, session is empty",
 			})
 		}
-		// If the user is authenticated, continue to the next middleware
-		dbSession := models.Session{}
-		dbResponse := repository.DBConnection.First(dbSession, "session = ?", sessionHeader)
-		if dbResponse.Error == nil {
-			return c.Status(500).JSON(fiber.Map{
-				"message": "Internal Server Error",
+
+		dbSession := &models.Session{}
+		dbResult := repository.DBConnection.Where("session_id = ?", requestSessionID).First(&dbSession)
+		if dbResult.Error != nil {
+			return c.Status(401).JSON(fiber.Map{
+				"message": "Unauthorized, session not found",
+				"error":   dbResult.Error,
 			})
 		}
 
-		dbUser := models.User{}
-		dbResponse = repository.DBConnection.First(dbUser, "id = ?", dbSession.UserID)
-		if dbUser.ID == 0 {
+		if dbSession.ExpiresAt.Before(time.Now()) {
 			return c.Status(401).JSON(fiber.Map{
-				"message": "Bad Request, user not found",
+				"message": "Unauthorized, session expired",
 			})
 		}
+
+		// Set the session in the context
+		c.Locals("session", dbSession)
+
+		c.JSON(fiber.Map{
+			"message":   "Authorized",
+			"DbSession": dbSession,
+		})
 
 		return c.Next()
 	}

@@ -8,13 +8,13 @@ import (
 )
 
 type Session struct {
-	ID        string `gorm:"primaryKey"`
-	UserID    uint   `gorm:"not null"`
-	expiresAt time.Time
+	SessionID string    `gorm:"primaryKey" json:"session_id"`
+	UserID    uint      `gorm:"not null" json:"user_id"`
+	ExpiresAt time.Time `gorm:"not null" json:"expires_at"`
 }
 
 // override the default gorm create function to set the ID to a uuid
 func (sesh *Session) BeforeCreate(tx *gorm.DB) (err error) {
-	sesh.ID = uuid.New().String()
+	sesh.SessionID = uuid.New().String()
 	return
 }

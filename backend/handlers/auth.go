@@ -2,11 +2,16 @@ package handlers
 
 import (
 	"regexp"
+	"time"
 
 	"github.com/McCune1224/Echo/models"
 	"github.com/McCune1224/Echo/repository"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	SESSION_LENGTH = 7 * 24 * time.Hour
 )
 
 func Login(c *fiber.Ctx) error {
@@ -30,34 +35,47 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	dbUser := &models.User{}
-	dbResult := repository.DBConnection.Where("email = ?", userData.Email).First(&dbUser)
+	dbResult := repository.DBConnection.Where("email = ? or username = ?", userData.Email, userData.Username).First(&dbUser)
 	if dbResult.Error != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": "Error finding user",
+		return c.Status(204).JSON(fiber.Map{
+			"message": "User not Found",
 			"error":   dbResult.Error,
 		})
 	}
 
 	if dbUser.ID == 0 {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(204).JSON(fiber.Map{
 			"message": "User not found",
 		})
 	}
 
 	hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(userData.Password))
-	fart, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 
 	if hashErr != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"message":  "Invalid password",
-			"error":    hashErr.Error(),
-			"dbUser":   dbUser.Password,
-			"userData": string(fart),
+			"message": "Invalid password",
+			"error":   hashErr.Error(),
+			"dbUser":  dbUser.Password,
 		})
 	}
-	return c.JSON(fiber.Map{
-		"message": "TODO: Implement Return of Session",
-	})
+
+	// Delete old sessions (if they exist...)
+	repository.DBConnection.Where("user_id = ?", dbUser.ID).Delete(&models.Session{})
+
+	// Create Session in DB
+	session := &models.Session{
+		UserID:    dbUser.ID,
+		ExpiresAt: time.Now().Add(SESSION_LENGTH),
+	}
+	dbResult = repository.DBConnection.Create(session)
+	if dbResult.Error != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Error creating session",
+			"error":   dbResult.Error.Error(),
+		})
+	}
+
+	return c.JSON(session)
 }
 
 func Logout(c *fiber.Ctx) error {
